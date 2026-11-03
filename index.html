@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>术语三档解释器 · 把专业段落讲成人话</title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --line:#e4e7ec;
+    --text:#1c2430;
+    --muted:#68717f;
+    --accent:#2f6fed;
+    --accent-soft:#eaf0ff;
+    --warn:#a56a00;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(20,30,50,.05), 0 8px 24px -12px rgba(20,30,50,.18);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+
+  .topbar{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:14px 22px;background:var(--panel);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:10;
+  }
+  .logo{
+    width:34px;height:34px;border-radius:10px;flex:0 0 auto;
+    background:linear-gradient(135deg,#2f6fed,#6f9bff);
+    display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px;
+  }
+  .brand{display:flex;flex-direction:column;line-height:1.25}
+  .brand b{font-size:16px;letter-spacing:.2px}
+  .brand span{font-size:12px;color:var(--muted)}
+  .spacer{flex:1 1 auto}
+  .badge{
+    font-size:12px;color:#2b4a86;background:var(--accent-soft);
+    border:1px solid #d7e2ff;border-radius:999px;padding:4px 10px;white-space:nowrap;
+  }
+  .offline{
+    font-size:12px;color:#226b46;background:#e9f8f0;border:1px solid #c9ecdb;
+    border-radius:999px;padding:4px 10px;white-space:nowrap;
+  }
+
+  .wrap{
+    max-width:1240px;margin:0 auto;padding:20px 22px 56px;
+    display:grid;grid-template-columns:400px minmax(0,1fr);gap:18px;align-items:start;
+  }
+  @media (max-width:980px){ .wrap{grid-template-columns:1fr} }
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel + .panel{margin-top:14px}
+  .panel-hd{
+    display:flex;align-items:center;gap:8px;
+    padding:12px 16px;border-bottom:1px solid var(--line);
+  }
+  .panel-hd h2{margin:0;font-size:14px;font-weight:600;letter-spacing:.2px}
+  .panel-hd .hint{margin-left:auto;font-size:12px;color:var(--muted)}
+  .panel-bd{padding:14px 16px}
+
+  textarea{
+    width:100%;min-height:210px;resize:vertical;
+    border:1px solid var(--line);border-radius:12px;padding:12px 13px;
+    font:inherit;line-height:1.7;color:var(--text);background:#fbfcfe;
+    outline:none;transition:border-color .15s, box-shadow .15s;
+  }
+  textarea:focus{border-color:#b9cdfd;box-shadow:0 0 0 3px rgba(47,111,237,.12);background:#fff}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+  .chip{
+    border:1px solid var(--line);background:#fff;border-radius:999px;
+    padding:5px 11px;font-size:12px;color:#3a4657;cursor:pointer;transition:.15s;
+  }
+  .chip:hover{border-color:#b9cdfd;color:var(--accent);background:var(--accent-soft)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .btn{
+    border:1px solid var(--line);background:#fff;color:var(--text);
+    border-radius:10px;padding:9px 14px;font:inherit;font-size:14px;cursor:pointer;
+    transition:.15s;display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn:hover{border-color:#c5d3ee;background:#f7f9ff}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .btn.primary:hover{background:#2a63d4}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .meta{font-size:12px;color:var(--muted);margin-top:10px}
+
+  .summary{
+    padding:16px;border-radius:12px;background:linear-gradient(180deg,#f7f9ff,#ffffff);
+    border:1px solid #e2e9fb;
+  }
+  .summary .label{font-size:12px;color:var(--muted);letter-spacing:.3px;margin-bottom:6px}
+  .summary p{margin:0;font-size:16px;line-height:1.7}
+  .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+  @media (max-width:640px){ .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  .stat{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfcfe}
+  .stat b{display:block;font-size:20px;letter-spacing:.3px;line-height:1.3}
+  .stat span{font-size:12px;color:var(--muted)}
+  .stat.hl b{color:var(--accent)}
+  .stat.warn b{color:var(--warn)}
+
+  .density-bar{height:8px;border-radius:999px;background:#eef1f6;margin-top:12px;overflow:hidden}
+  .density-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#57c08a,#f2c14e 55%,#ef8a62);transition:width .35s}
+
+  .src{
+    margin-top:14px;white-space:pre-wrap;word-break:break-word;
+    font-size:14.5px;line-height:1.9;color:#2b3543;
+    max-height:320px;overflow:auto;padding-right:6px;
+  }
+  mark.term{
+    background:#e8f0ff;color:#1b4bb0;border-bottom:1px solid #a9c4ff;
+    padding:0 2px;border-radius:3px;
+  }
+
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:6px}
+  @media (max-width:760px){ .cards{grid-template-columns:1fr} }
+  .card{
+    border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:#fff;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .card-hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .card-hd h3{margin:0;font-size:15.5px;letter-spacing:.2px}
+  .tag{
+    font-size:11.5px;padding:2px 8px;border-radius:999px;white-space:nowrap;
+    background:hsl(var(--h,215) 90% 96%);color:hsl(var(--h,215) 62% 34%);
+    border:1px solid hsl(var(--h,215) 80% 88%);
+  }
+  .count{margin-left:auto;font-size:12px;color:var(--muted)}
+  .tier{display:grid;grid-template-columns:52px 1fr;gap:6px 8px;font-size:14px;align-items:start}
+  .tier dt{font-size:12px;color:var(--muted);padding-top:2px}
+  .tier dd{margin:0;line-height:1.65}
+  .tier dd.plain{color:#1f5b3c}
+  .tier dd.analogy{color:#6b4a12}
+
+  .unlisted{display:flex;gap:8px;flex-wrap:wrap}
+  .unlisted span{font-size:12.5px;border:1px dashed #d3d9e4;border-radius:8px;padding:4px 9px;color:#4a5464;background:#fbfcfe}
+
+  .empty{padding:38px 10px;text-align:center;color:var(--muted)}
+  .empty b{display:block;color:var(--text);font-size:15px;margin-bottom:6px}
+  .empty p{margin:0 0 14px}
+
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px}
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(12px);
+    background:#1f2733;color:#fff;font-size:13px;padding:9px 15px;border-radius:10px;
+    opacity:0;pointer-events:none;transition:.22s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .foot{max-width:1240px;margin:0 auto;padding:0 22px 36px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">术</div>
+  <div class="brand">
+    <b>术语三档解释器</b>
+    <span>粘一段专业文字，自动拆成 专家版 / 通俗版 / 类比 三档解释</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="badge" id="libBadge">术语库加载中…</span>
+  <span class="offline">纯本地运行 · 不联网</span>
+</header>
+
+<main class="wrap">
+  <!-- 左栏 -->
+  <section>
+    <div class="panel">
+      <div class="panel-hd"><h2>① 放入要解释的文字</h2><span class="hint">⌘ / Ctrl + Enter 分析</span></div>
+      <div class="panel-bd">
+        <div class="chips">
+          <button class="chip" data-sample="0">示例：AI 论文摘要</button>
+          <button class="chip" data-sample="1">示例：外贸询盘</button>
+          <button class="chip" data-sample="2">示例：医药新闻</button>
+        </div>
+        <textarea id="input" spellcheck="false" placeholder="粘贴论文摘要、技术文档、外贸邮件、财报段落、科普文章…&#10;&#10;也可以直接把 .txt / .md 文件拖进来。"></textarea>
+        <div class="row">
+          <button class="btn primary" id="runBtn">开始解释</button>
+          <button class="btn" id="clearBtn">清空</button>
+          <button class="btn" id="pasteBtn">读剪贴板</button>
+        </div>
+        <div class="row">
+          <label class="chip" style="cursor:pointer">
+            <input type="checkbox" id="autoRun" checked style="vertical-align:-2px;margin-right:6px" />
+            输入时自动分析
+          </label>
+          <label class="chip" style="cursor:pointer">
+            <input type="checkbox" id="denseOff" style="vertical-align:-2px;margin-right:6px" />
+            隐藏「专家版」（只看人话）
+          </label>
+        </div>
+        <div class="meta" id="inputMeta">0 字 · 0 句</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd"><h2>② 结果拿去用</h2><span class="hint">本地生成，可直接贴进文档</span></div>
+      <div class="panel-bd">
+        <div class="row" style="margin-top:0">
+          <button class="btn" id="copyBtn" disabled>复制 Markdown</button>
+          <button class="btn" id="downloadBtn" disabled>下载 .md</button>
+        </div>
+        <div class="meta">说明：术语来自内置术语库（<span id="libCount">0</span> 条 / <span id="libDomain">0</span> 个领域）；未收录的词会单独列出，方便继续补库。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 右栏 -->
+  <section id="resultPanel">
+    <div class="panel">
+      <div class="panel-hd"><h2>③ 解释结果</h2><span class="hint" id="resultHint">等待输入</span></div>
+      <div class="panel-bd" id="result">
+        <div class="empty">
+          <b>还没有内容</b>
+          <p>左边粘一段文字，或者点一个示例，看看它长什么样。</p>
+          <button class="btn" data-sample="0">试一个示例</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="foot">
+  术语三档解释器 · 2026 软工实践周作品（高级组）· 全部计算在浏览器本地完成，文本不会上传到任何服务器。
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="engine.js"></script>
+<script>
+(function () {
+  'use strict';
+  var E = window.TermLens;
+
+  var SAMPLES = [
+    '大语言模型的检索增强生成（RAG）流程通常包含三步：先用嵌入模型把文档转成向量并写入向量数据库，' +
+    '再按用户问题做相似度召回，最后把召回片段拼进提示词送入模型生成答案。这种做法能在一定程度上缓解幻觉，' +
+    '但也会因为召回噪声而导致回答偏离。工程上还需要关注上下文窗口的占用、微调与量化带来的推理成本变化，' +
+    '并通过消融实验确认各组件是否真的有用。',
+
+    'Dear supplier, we received your quotation dated Oct 12. Thanks for the prompt reply. ' +
+    'Two points before we confirm the order: first, the price we see is FOB Shenzhen, while our buyer ' +
+    'asked for CIF Jebel Ali, so please re-check the freight and the exchange rate assumption; second, ' +
+    'our customs broker needs the certificate of origin to confirm the tariff rate, otherwise the customs clearance ' +
+    'may be delayed and we will have to claim demurrage.',
+
+    '一项针对 1,200 名受试者的双盲试验显示，新药在高剂量组的半衰期为 18 小时，明显长于对照组的 9 小时。' +
+    '研究以血液中的生物标志物作为主要终点，发现治疗组的指标改善具有统计学显著性（p<0.01），' +
+    '置信区间不跨零。研究者指出，该药的作用靶点在同一通路上，未来可与现有安慰剂对照方案直接比较；' +
+    '但剂量相关的副作用仍需在更长的队列研究中确认。'
+  ];
+
+  var last = null;
+  var timer = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var input = $('input');
+  var result = $('result');
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function colorOf(domain) {
+    var h = 0;
+    for (var i = 0; i < domain.length; i++) h = (h * 31 + domain.charCodeAt(i)) % 360;
+    return 200 + (h % 90);
+  }
+  function toast(msg) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.className = 'toast show';
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.className = 'toast'; }, 1600);
+  }
+
+  function render(a) {
+    if (!a || !a.chars) {
+      result.innerHTML = '<div class="empty"><b>还没有内容</b><p>左边粘一段文字，或者点一个示例，看看它长什么样。</p>' +
+        '<button class="btn" data-sample="0">试一个示例</button></div>';
+      bindSampleButtons();
+      $('resultHint').textContent = '等待输入';
+      return;
+    }
+    var hideExpert = $('denseOff').checked;
+    var pct = Math.min(100, Math.round((a.ratio / 0.25) * 100));
+    var html = '';
+
+    html += '<div class="summary">' +
+      '<div class="label">一句话总结</div>' +
+      '<p>' + esc(a.summary || '（这段文字没有提取到句子）') + '</p>' +
+      '<div class="stats">' +
+        '<div class="stat warn"><b>' + (a.ratio * 100).toFixed(1) + '%</b><span>术语密度 · ' + esc(a.level.label) + '</span></div>' +
+        '<div class="stat"><b>' + a.chars + '</b><span>字数</span></div>' +
+        '<div class="stat"><b>' + a.sentences + '</b><span>句数</span></div>' +
+        '<div class="stat hl"><b>' + a.terms.length + '</b><span>命中术语</span></div>' +
+      '</div>' +
+      '<div class="density-bar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="meta">' + esc(a.level.hint) + '</div>' +
+    '</div>';
+
+    html += '<div class="panel-hd" style="border:0;padding:18px 0 6px"><h2>原文中的术语</h2><span class="hint">蓝底＝已收录</span></div>';
+    html += '<div class="src">' + E.highlightHtml(a) + '</div>';
+
+    html += '<div class="panel-hd" style="border:0;padding:18px 0 6px"><h2>术语卡</h2><span class="hint">' + a.terms.length + ' 张</span></div>';
+    if (!a.terms.length) {
+      html += '<div class="meta">这段话里没有命中术语库的词。看看下面的「未收录候选」，可能是需要补库的新词。</div>';
+    } else {
+      html += '<div class="cards">';
+      a.terms.forEach(function (t) {
+        var g = E.byTerm(t.term);
+        if (!g) return;
+        html += '<article class="card">' +
+          '<div class="card-hd">' +
+            '<h3>' + esc(g.term) + '</h3>' +
+            '<span class="tag" style="--h:' + colorOf(g.domain) + '">' + esc(g.domain) + '</span>' +
+            '<span class="count">出现 ' + t.count + ' 次</span>' +
+          '</div>' +
+          '<dl class="tier">' +
+            (hideExpert ? '' : '<dt>专家版</dt><dd>' + esc(g.expert) + '</dd>') +
+            '<dt>通俗版</dt><dd class="plain">' + esc(g.plain) + '</dd>' +
+            '<dt>类比</dt><dd class="analogy">' + esc(g.analogy) + '</dd>' +
+          '</dl>' +
+        '</article>';
+      });
+      html += '</div>';
+    }
+
+    if (a.unlisted && a.unlisted.length) {
+      html += '<div class="panel-hd" style="border:0;padding:18px 0 6px"><h2>未收录候选</h2><span class="hint">建议补进术语库</span></div>';
+      html += '<div class="unlisted">' + a.unlisted.map(function (u) {
+        return '<span>' + esc(u.word) + ' · ' + u.count + '</span>';
+      }).join('') + '</div>';
+    }
+
+    result.innerHTML = html;
+    $('resultHint').textContent = a.terms.length + ' 个术语 · 密度 ' + (a.ratio * 100).toFixed(1) + '%';
+  }
+
+  function run() {
+    var text = input.value;
+    var a = E.analyze(text);
+    var cleanChars = text.replace(/\s+/g, '').length;
+    $('inputMeta').textContent = cleanChars + ' 字 · ' + a.sentences + ' 句';
+    if (!cleanChars) { last = null; render(null); setExport(false); return; }
+    last = a;
+    render(a);
+    setExport(true);
+  }
+
+  function setExport(on) {
+    $('copyBtn').disabled = !on;
+    $('downloadBtn').disabled = !on;
+  }
+
+  function scheduleRun() {
+    if (!$('autoRun').checked) { run(); return; }
+    clearTimeout(timer);
+    timer = setTimeout(run, 320);
+  }
+
+  function bindSampleButtons() {
+    document.querySelectorAll('[data-sample]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        input.value = SAMPLES[Number(b.getAttribute('data-sample'))] || '';
+        run();
+        input.focus();
+      });
+    });
+  }
+
+  function loadFromFile(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      input.value = String(reader.result || '').slice(0, 20000);
+      run();
+      toast('已读取文件：' + file.name);
+    };
+    reader.readAsText(file, 'utf-8');
+  }
+
+  /* 初始化 */
+  var st = E.stats();
+  $('libBadge').textContent = '术语库 ' + st.terms + ' 条 · ' + st.domainCount + ' 个领域';
+  $('libCount').textContent = st.terms;
+  $('libDomain').textContent = st.domainCount;
+  bindSampleButtons();
+
+  /* 支持用 #s0 / #s1 / #s2 直接预填示例（录屏、截图方便） */
+  (function () {
+    var m = String(location.hash || '').match(/^#s([0-2])$/);
+    if (m) { input.value = SAMPLES[Number(m[1])] || ''; run(); }
+  })();
+
+  input.addEventListener('input', scheduleRun);
+  input.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); run(); }
+  });
+  input.addEventListener('dragover', function (e) { e.preventDefault(); input.style.borderColor = '#9dbcfb'; });
+  input.addEventListener('dragleave', function () { input.style.borderColor = ''; });
+  input.addEventListener('drop', function (e) {
+    e.preventDefault(); input.style.borderColor = '';
+    var f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadFromFile(f);
+  });
+
+  $('runBtn').addEventListener('click', run);
+  $('clearBtn').addEventListener('click', function () { input.value = ''; input.focus(); run(); });
+  $('pasteBtn').addEventListener('click', function () {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      navigator.clipboard.readText().then(function (t) {
+        input.value = t.slice(0, 20000); run(); toast('已从剪贴板读取');
+      }).catch(function () { toast('浏览器拒绝了剪贴板读取，请直接 ⌘V'); });
+    } else { toast('当前浏览器不支持读剪贴板，请直接 ⌘V'); }
+  });
+  $('denseOff').addEventListener('change', function () { if (last) render(last); });
+
+  $('copyBtn').addEventListener('click', function () {
+    if (!last) return;
+    var md = E.toMarkdown(last);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(md).then(function () { toast('已复制 Markdown'); })
+        .catch(function () { toast('复制失败，请用「下载 .md」'); });
+    } else { toast('当前浏览器不支持复制，请用「下载 .md」'); }
+  });
+
+  $('downloadBtn').addEventListener('click', function () {
+    if (!last) return;
+    var md = E.toMarkdown(last);
+    var blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '术语解释_' + new Date().toISOString().slice(0, 10) + '.md';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    toast('已下载 Markdown');
+  });
+})();
+</script>
+</body>
+</html>
