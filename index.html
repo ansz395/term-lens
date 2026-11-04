@@ -93,6 +93,13 @@
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .meta{font-size:12px;color:var(--muted);margin-top:10px}
 
+  .human{
+    background:linear-gradient(180deg,#f7faff,#f2f7ff);
+    border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    font-size:15px;line-height:1.95;letter-spacing:.1px;
+  }
+  .human em{font-style:normal;color:#1f6ef5;background:#e9f1ff;border-radius:4px;padding:0 3px}
+  .human + .meta{margin-top:8px}
   .summary{
     padding:16px;border-radius:12px;background:linear-gradient(180deg,#f7f9ff,#ffffff);
     border:1px solid #e2e9fb;
@@ -305,6 +312,15 @@
       '<div class="density-bar"><i style="width:' + pct + '%"></i></div>' +
       '<div class="meta">' + esc(a.level.hint) + '</div>' +
     '</div>';
+
+    if (a.humanized && a.humanized.text) {
+      var humanHtml = esc(a.humanized.text).replace(/（([^（）]{1,40})）/g, '<em>（$1）</em>');
+      html += '<div class="panel-hd" style="border:0;padding:20px 0 6px"><h2>整段人话版</h2>' +
+        '<span class="hint">生词后面括号里就是人话</span></div>';
+      html += '<div class="human">' + humanHtml + '</div>';
+      html += '<div class="meta">替换了 ' + a.humanized.replaced + ' 处，覆盖 ' +
+        a.humanized.mapping.length + ' 个不同术语；点「复制 Markdown」可连对照表一起拿走。</div>';
+    }
 
     html += '<div class="panel-hd" style="border:0;padding:18px 0 6px"><h2>原文中的术语</h2><span class="hint">蓝底＝已收录</span></div>';
     html += '<div class="src">' + E.highlightHtml(a) + '</div>';
