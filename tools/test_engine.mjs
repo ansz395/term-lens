@@ -74,7 +74,18 @@ const md = E.toMarkdown(a1);
 check('Markdown 有三档标题', md.includes('**专家版**') && md.includes('**通俗版**') && md.includes('**类比**'));
 check('Markdown 含密度', md.includes('术语密度'));
 
-console.log('== 9. 边界输入 ==');
+console.log('== 9. 整段人话版 ==');
+const h1 = a1.humanized;
+check('人话版文本非空', typeof h1.text === 'string' && h1.text.length > 50);
+check('人话版数量与命中一致', h1.replaced === a1.hits.length);
+check('人话版含括号注解', /（[^（）]{2,}）/.test(h1.text));
+check('人话版覆盖全部命中词', a1.terms.every(t => h1.mapping.some(m => m.term === t.term)));
+const aliasText = E.analyze('这就是检索增强生成（RAG）的常见做法。').humanized.text;
+check('括号别名合并成「RAG，人话」', aliasText.includes('（RAG，') && (aliasText.match(/检索增强生成/g) || []).length === 1);
+check('未命中时人话版等于原文', E.analyze('今天天气不错。').humanized.text === '今天天气不错。');
+check('空输入人话版为空', E.analyze('').humanized.text === '');
+
+console.log('== 10. 边界输入 ==');
 ['', '   ', '\n\n', '一句话没有任何术语。', 'A'.repeat(500)].forEach((x, i) => {
   const r = E.analyze(x);
   check('空/极简输入 #' + i + ' 不崩', typeof r.summary === 'string' && r.terms !== undefined);
